@@ -1,4 +1,10 @@
+# -*- coding: UTF-8 -*-
 '''
+     ____  ____  ____  _____     ___  ____  _  _  ____  ____    __   ____  _____  ____
+    (  _ \( ___)(  _ \(  _  )   / __)( ___)( \( )( ___)(  _ \  /__\ (_  _)(  _  )(  _ \
+     )   / )__)  )___/ )(_)(   ( (_-. )__)  )  (  )__)  )   / /(__)\  )(   )(_)(  )   /
+    (_)\_)(____)(__)  (_____)   \___/(____)(_)\_)(____)(_)\_)(__)(__)(__) (_____)(_)\_)
+
     repository files and addons.xml generator
 
     If it errors out saying any import below is missing, be sure to add it via the pip install command in a console window
@@ -144,6 +150,8 @@ class Generator:
             shutil.copy(addonid + '/addon.xml', self.output_path + addonid + os.path.sep + 'addon.xml')
             try:
                 shutil.copy(addonid + '/icon.png', self.output_path + addonid + os.path.sep + 'icon.png')
+            except Exception:
+                shutil.copy(addonid + '/icon.gif', self.output_path + addonid + os.path.sep + 'icon.gif')
             except Exception:
                 print('**** Icon file missing for ' + addonid)
             try:
