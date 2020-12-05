@@ -17,6 +17,8 @@
     04/12/2018
         Modified by MuadDib: Fixed md5 hashing issue for addons.xml file
         Modified by MuadDib: Added excludes line to config.ini. This is a comma separated value of file extensions to not add to zip file in releases
+    12/4/2020
+        Modified by Shellc0de: Cleaned up some code. Added the ability to capture both .png and .gif for icons
 
     This file is "as is", without any warranty whatsoever. Use as own risk
 
@@ -31,6 +33,7 @@ import shutil
 from xml.dom import minidom
 import datetime
 import traceback
+import glob
 from ConfigParser import SafeConfigParser
 
 
@@ -149,9 +152,8 @@ class Generator:
             shutil.move(filename, self.output_path + addonid + os.path.sep + filename)
             shutil.copy(addonid + '/addon.xml', self.output_path + addonid + os.path.sep + 'addon.xml')
             try:
-                shutil.copy(addonid + '/icon.png', self.output_path + addonid + os.path.sep + 'icon.png')
-            except Exception:
-                shutil.copy(addonid + '/icon.gif', self.output_path + addonid + os.path.sep + 'icon.gif')
+                icon_src = ''.join([str(x) for x in glob.glob(addonid + '/icon.*')])
+                shutil.copy(icon_src, self.output_path + addonid + os.path.sep + icon_src[-8:])
             except Exception:
                 print('**** Icon file missing for ' + addonid)
             try:
