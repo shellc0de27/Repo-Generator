@@ -27,13 +27,13 @@
 '''
 
 import os
+import glob
+import shutil
 import hashlib
 import zipfile
-import shutil
-from xml.dom import minidom
 import datetime
 import traceback
-import glob
+from xml.dom import minidom
 from ConfigParser import SafeConfigParser
 
 
@@ -100,7 +100,6 @@ class Generator:
             url=url,
             output_path=self.output_path)
 
-        # save file
         if not os.path.exists(addonid):
             os.makedirs(addonid)
 
@@ -135,14 +134,12 @@ class Generator:
         print("Generate zip file for " + addonid + " " + version)
         filename = path + "-" + version + ".zip"
         try:
-            zip = zipfile.ZipFile(filename, 'w')
-            for root, dirs, files in os.walk(path + os.path.sep):
-                for file in files:
-                    ext = os.path.splitext(file)[-1].lower()
-                    if ext not in self.excludes:
-                        zip.write(os.path.join(root, file))
-
-            zip.close()
+            with zipfile.ZipFile(filename, 'w') as zip:
+                for root, dirs, files in os.walk(path + os.path.sep):
+                    for file in files:
+                        ext = os.path.splitext(file)[-1].lower()
+                        if ext not in self.excludes:
+                            zip.write(os.path.join(root, file))
 
             if not os.path.exists(self.output_path + addonid):
                 os.makedirs(self.output_path + addonid)
@@ -172,31 +169,24 @@ class Generator:
         addons_xml = u"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<addons>\n"
         # loop thru and add each addons addon.xml file
         for addon in addons:
-            # create path
             _path = os.path.join(addon, "addon.xml")
-            # skip path if it has no addon.xml
             if not os.path.isfile(_path):
                 continue
             try:
-                # split lines for stripping
-                xml_lines = open(_path, "r").read().splitlines()
-                # new addon
+                with open(_path, "r") as xl:
+                    xml_lines = xl.read().splitlines()
+
                 addon_xml = ""
-                # loop thru cleaning each line
                 for line in xml_lines:
-                    # skip encoding format line
                     if (line.find("<?xml") >= 0):
                         continue
-                    # add line
                     addon_xml += unicode(line.rstrip() + "\n", "utf-8")
                 # we succeeded so add to our final addons.xml text
                 addons_xml += addon_xml.rstrip() + "\n\n"
             except Exception:
-                # missing or poorly formatted addon.xml
                 failure = traceback.format_exc()
-                print("Excluding %s for %s" % (str(_path), str(addon)))
-                print("Exception Details:")
-                print(str(failure))
+                print("Excluding %s for %s due to missing or poorly formatted addon.xml" % (str(_path), str(addon)))
+                print("Exception Details: \n" + failure)
 
         # clean and add closing tag
         addons_xml = addons_xml.strip() + u"\n</addons>\n"
@@ -222,10 +212,11 @@ class Generator:
     def _save_file(self, data, file):
         try:
             # write data to the file
-            open(file, "w").write(data)
+            with open(file, "w") as sf:
+                sf.write(data)
         except Exception:
             failure = traceback.format_exc()
-            print("**** An error occurred saving %s file!\n")
+            print("**** An error occurred saving --> %s \n" % file)
             print('Kodi Repo Generator Exception: \n' + str(failure))
 
 
