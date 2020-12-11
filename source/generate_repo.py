@@ -132,7 +132,7 @@ class Generator:
 
     def _generate_zip_file(self, path, version, addonid):
         print("Generate zip file for " + addonid + " " + version)
-        filename = path + "-" + version + ".zip"
+        filename = '{path}-{version}.zip'.format(path=path, version=version)
         try:
             with zipfile.ZipFile(filename, 'w') as zip:
                 for root, dirs, files in os.walk(path + os.path.sep):
@@ -144,13 +144,16 @@ class Generator:
             if not os.path.exists(self.output_path + addonid):
                 os.makedirs(self.output_path + addonid)
 
-            if os.path.isfile(self.output_path + addonid + os.path.sep + filename):
-                os.rename(self.output_path + addonid + os.path.sep + filename, self.output_path + addonid + os.path.sep + filename + "." + datetime.datetime.now().strftime("%Y%m%d%H%M%S"))
-            shutil.move(filename, self.output_path + addonid + os.path.sep + filename)
-            shutil.copy(addonid + '/addon.xml', self.output_path + addonid + os.path.sep + 'addon.xml')
+            dst_path = self.output_path + addonid + os.path.sep
+
+            if os.path.isfile(dst_path + filename):
+                os.rename(dst_path + filename, '{dst_path}{filename}.{dt}'.format(
+                    dst_path=dst_path, filename=filename, dt=datetime.datetime.now().strftime("%Y%m%d%H%M%S")))
+            shutil.move(filename, dst_path + filename)
+            shutil.copy(addonid + '/addon.xml', dst_path + 'addon.xml')
             try:
                 icon_src = ''.join([str(x) for x in glob.glob(addonid + '/icon.*')])
-                shutil.copy(icon_src, self.output_path + addonid + os.path.sep + icon_src[-8:])
+                shutil.copy(icon_src, dst_path + icon_src[-8:])
             except Exception:
                 print('**** Icon file missing for ' + addonid)
             try:
