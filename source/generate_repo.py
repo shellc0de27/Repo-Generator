@@ -34,7 +34,7 @@ import zipfile
 import datetime
 import traceback
 from xml.dom import minidom
-from ConfigParser import SafeConfigParser
+from configparser import SafeConfigParser
 
 
 class Generator:
@@ -51,7 +51,7 @@ class Generator:
         self.config = SafeConfigParser()
         self.config.read('config.ini')
         self.tools_path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__))))
-        self.output_path = "_" + self.config.get('locations', 'output_path')
+        self.output_path = '_' + self.config.get('locations', 'output_path')
         self.excludes = self.config.get('addon', 'excludes').split(',')
 
         os.chdir(os.path.abspath(os.path.join(self.tools_path, os.pardir)))
@@ -108,7 +108,7 @@ class Generator:
             if not os.path.isfile(_path):
                 continue
             try:
-                if (not os.path.isdir(addon) or addon == '.git' or addon == self.output_path or addon == self.tools_path):
+                if not os.path.isdir(addon) or addon == '.git' or addon == self.output_path or addon == self.tools_path:
                     continue
                 _path = os.path.join(addon, 'addon.xml')
                 document = minidom.parse(_path)
@@ -157,52 +157,52 @@ class Generator:
 
     def _generate_addons_file(self):
         addons = os.listdir('.')
-        addons_xml = u'<?xml version="1.0" encoding="UTF-8"?>\n<addons>\n'
+        addons_xml = '<?xml version="1.0" encoding="UTF-8"?>\n<addons>\n'
         for addon in addons:
             _path = os.path.join(addon, 'addon.xml')
             if not os.path.isfile(_path):
                 continue
             try:
-                with open(_path, 'r') as xl:
+                with open(_path, 'r', encoding='utf-8') as xl:
                     xml_lines = xl.read().splitlines()
 
                 addon_xml = ''
                 for line in xml_lines:
-                    if (line.find('<?xml') >= 0):
+                    if line.find('<?xml') >= 0:
                         continue
-                    addon_xml += unicode(line.rstrip() + '\n', 'utf-8')
+                    addon_xml += line.rstrip() + '\n'
                 addons_xml += addon_xml.rstrip() + '\n\n'
             except Exception:
                 failure = traceback.format_exc()
                 print('Excluding %s for %s due to missing or poorly formatted addon.xml' % (str(_path), str(addon)))
                 print('Exception Details: \n' + failure)
 
-        addons_xml = addons_xml.strip() + u'\n</addons>\n'
+        addons_xml = addons_xml.strip() + '\n</addons>\n'
         self._save_file(addons_xml.encode('utf-8'), file=self.output_path + 'addons.xml')
 
     def _generate_md5_file(self):
         try:
             hash_object = hashlib.md5()
-            with open((self.output_path + 'addons.xml'), 'rb') as addons_file:
+            with open(self.output_path + 'addons.xml', 'rb') as addons_file:
                 hash_buf = addons_file.read()
                 hash_object.update(hash_buf)
 
             result = hash_object.hexdigest()
-            self._save_file(result, file=self.output_path + 'addons.xml.md5')
+            self._save_file(result.encode('utf-8'), file=self.output_path + 'addons.xml.md5')
         except Exception:
             failure = traceback.format_exc()
-            print('**** An error occurred creating addons.xml.md5 file!\n')
+            print('**** An error occurred creating addons.xml.md5 file!')
             print('Kodi Repo Generator Exception: \n' + str(failure))
 
     def _save_file(self, data, file):
         try:
-            with open(file, 'w') as sf:
-                sf.write(data)
+            with open(file, 'w', encoding='utf-8') as sf:
+                sf.write(data.decode('utf-8'))
         except Exception:
             failure = traceback.format_exc()
-            print('**** An error occurred saving --> %s \n' % file)
+            print('**** An error occurred saving --> %s' % file)
             print('Kodi Repo Generator Exception: \n' + str(failure))
 
 
-if (__name__ == '__main__'):
+if __name__ == '__main__':
     Generator()
