@@ -19,6 +19,8 @@
         Modified by MuadDib: Added excludes line to config.ini. This is a comma separated value of file extensions to not add to zip file in releases
     12/4/2020
         Modified by Shellc0de: Cleaned up some code. Added the ability to capture both .png and .gif for icons
+    12/13/2020
+        Modified by Shellc0de: Port to Python 3.6+ only. Anything lower is not supported
 
     This file is "as is", without any warranty whatsoever. Use as own risk
 
@@ -118,7 +120,7 @@ class Generator:
                 self._generate_zip_file(addon, version, addonid)
             except Exception:
                 failure = traceback.format_exc()
-                print('Kodi Repo Generator Exception: \n' + str(failure))
+                print(f'Kodi Repo Generator Exception: \n{failure}')
 
     def _generate_zip_file(self, path, version, addonid):
         print('Generate zip file for ' + addonid + ' ' + version)
@@ -145,15 +147,15 @@ class Generator:
                 icon_src = ''.join([str(x) for x in glob.glob(addonid + '/icon.*')])
                 shutil.copy(icon_src, dst_path + icon_src[-8:])
             except Exception:
-                print('**** Icon file missing for ' + addonid)
+                print(f'**** Icon file missing for {addonid}')
             try:
                 shutil.copy(addonid + '/fanart.jpg', dst_path + 'fanart.jpg')
             except Exception:
-                print('**** Fanart file missing for ' + addonid)
+                print(f'**** Fanart file missing for {addonid}')
 
         except Exception:
             failure = traceback.format_exc()
-            print('Kodi Repo Generator Exception: \n' + str(failure))
+            print(f'Kodi Repo Generator Exception: \n{failure}')
 
     def _generate_addons_file(self):
         addons = os.listdir('.')
@@ -174,8 +176,8 @@ class Generator:
                 addons_xml += addon_xml.rstrip() + '\n\n'
             except Exception:
                 failure = traceback.format_exc()
-                print('Excluding %s for %s due to missing or poorly formatted addon.xml' % (str(_path), str(addon)))
-                print('Exception Details: \n' + failure)
+                print(f'Excluding {_path} for {addon} due to missing or poorly formatted addon.xml')
+                print(f'Exception Details: \n{failure}')
 
         addons_xml = addons_xml.strip() + '\n</addons>\n'
         self._save_file(addons_xml.encode('utf-8'), file=self.output_path + 'addons.xml')
@@ -192,7 +194,7 @@ class Generator:
         except Exception:
             failure = traceback.format_exc()
             print('**** An error occurred creating addons.xml.md5 file!')
-            print('Kodi Repo Generator Exception: \n' + str(failure))
+            print(f'Kodi Repo Generator Exception: \n{failure}')
 
     def _save_file(self, data, file):
         try:
@@ -200,8 +202,8 @@ class Generator:
                 sf.write(data.decode('utf-8'))
         except Exception:
             failure = traceback.format_exc()
-            print('**** An error occurred saving --> %s' % file)
-            print('Kodi Repo Generator Exception: \n' + str(failure))
+            print(f'**** An error occurred saving --> {file}')
+            print(f'Kodi Repo Generator Exception: \n{failure}')
 
 
 if __name__ == '__main__':

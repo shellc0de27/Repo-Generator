@@ -11,7 +11,7 @@
 
 ## Install
 
-- Requires Python 2.7 at this moment. However, will be py 3.6+ ONLY very soon.
+- Requires Python 3.6 or higher (tested on 3.6)
 
 ## Author
 
