@@ -1,3 +1,9 @@
+<p align="center">
+    <img src="https://forthebadge.com/images/badges/made-with-python.svg">
+    <img src="https://forthebadge.com/images/badges/fo-shizzle.svg">
+</p>
+
+
 # Repo Generator Project
 
 > All original work and credit goes out to the developers of the original Generator this is based on. I do not have their handles, so using this as the credit for their inspiration on this fork
