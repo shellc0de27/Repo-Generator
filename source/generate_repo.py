@@ -65,11 +65,13 @@ class Generator:
         self._generate_zip_files()
 
         print('Finished updating addons xml, md5 files and zipping addons')
-        print('Always double check your MD5 Hash using a site like http://onlinemd5.com/ if the repo is not showing files or downloading properly.')
+        print('Always double check your MD5 Hash using a site like http://onlinemd5.com/', end=' ')
+        print('if the repo is not showing files or downloading properly.')
 
     def _pre_run(self):
-        if not os.path.exists(self.output_path):
-            os.makedirs(self.output_path)
+        if os.path.exists(self.output_path):
+            shutil.rmtree(self.output_path, ignore_errors=True)
+        os.makedirs(self.output_path)
 
     def _generate_repo_files(self):
         addonid = self.config.get('addon', 'id')
@@ -138,9 +140,10 @@ class Generator:
 
             dst_path = self.output_path + addonid + os.path.sep
 
-            if os.path.isfile(dst_path + filename):
-                os.rename(dst_path + filename, '{dst_path}{filename}.{dt}'.format(
-                    dst_path=dst_path, filename=filename, dt=datetime.datetime.now().strftime('%Y%m%d%H%M%S')))
+            # NOTE: Probably not needed anymore!
+            # if os.path.isfile(dst_path + filename):
+            #     os.rename(dst_path + filename, '{dst_path}{filename}.{dt}'.format(
+            #         dst_path=dst_path, filename=filename, dt=datetime.datetime.now().strftime('%Y%m%d%H%M%S')))
             shutil.move(filename, dst_path + filename)
             shutil.copy(addonid + '/addon.xml', dst_path + 'addon.xml')
             try:
@@ -207,4 +210,5 @@ class Generator:
 
 
 if __name__ == '__main__':
+    print('Executing the Kodi Repo Generator.....')
     Generator()
