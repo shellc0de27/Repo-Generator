@@ -1,6 +1,6 @@
 <p align="center">
-    <img src="https://forthebadge.com/images/badges/made-with-python.svg">
-    <img src="https://forthebadge.com/images/badges/fo-shizzle.svg">
+  <img src="https://forthebadge.com/images/badges/made-with-python.svg">
+  <img src="https://forthebadge.com/images/badges/fo-shizzle.svg">
 </p>
 
 
