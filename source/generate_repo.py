@@ -7,7 +7,7 @@
 
     repository files and addons.xml generator
 
-    If it errors out saying any import below is missing, be sure to add it via the pip install command in a console window
+    All imports are from the built in standard library, nothing else is needed
 
     Unknown Dates - Work of previous developers
         Modified by Rodrigo@XMBCHUB to zip plugins/repositories to a "zip" folder
@@ -21,8 +21,10 @@
         Modified by Shellc0de: Cleaned up some code. Added the ability to capture both .png and .gif for icons
     12/13/2020
         Modified by Shellc0de: Port to Python 3.6+ only. Anything lower is not supported
+        Modified by Shellc0de: Automatically deletes _zips (output_path set in the config.ini) folder for you
+        whenever the repo needs to be updated
 
-    This file is "as is", without any warranty whatsoever. Use as own risk
+    This file is "as is", without any warranty whatsoever. Use at your own risk
 
     Youtube Video Series for this script package:
         Playlist: https://www.youtube.com/playlist?list=PLYkSOUo1Vu4ZN6l6xJ9fzJ-d0Y_-ACo68
@@ -33,7 +35,6 @@ import glob
 import shutil
 import hashlib
 import zipfile
-import datetime
 import traceback
 from xml.dom import minidom
 from configparser import SafeConfigParser
@@ -140,10 +141,6 @@ class Generator:
 
             dst_path = self.output_path + addonid + os.path.sep
 
-            # NOTE: Probably not needed anymore!
-            # if os.path.isfile(dst_path + filename):
-            #     os.rename(dst_path + filename, '{dst_path}{filename}.{dt}'.format(
-            #         dst_path=dst_path, filename=filename, dt=datetime.datetime.now().strftime('%Y%m%d%H%M%S')))
             shutil.move(filename, dst_path + filename)
             shutil.copy(addonid + '/addon.xml', dst_path + 'addon.xml')
             try:
