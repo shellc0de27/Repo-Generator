@@ -126,7 +126,7 @@ class Generator:
                 print(f'Kodi Repo Generator Exception: \n{failure}')
 
     def _generate_zip_file(self, path, version, addonid):
-        print('Generate zip file for ' + addonid + ' ' + version)
+        print(f'Generate zip file for {addonid} {version}'
         filename = '{path}-{version}.zip'.format(path=path, version=version)
         try:
             with zipfile.ZipFile(filename, 'w') as zip:
@@ -168,12 +168,8 @@ class Generator:
                 with open(_path, 'r', encoding='utf-8') as xl:
                     xml_lines = xl.read().splitlines()
 
-                addon_xml = ''
-                for line in xml_lines:
-                    if line.find('<?xml') >= 0:
-                        continue
-                    addon_xml += line.rstrip() + '\n'
-                addons_xml += addon_xml.rstrip() + '\n\n'
+                addon_xml = '\n'.join(str(line.rstrip()) for line in xml_lines if not line.find('<?xml') >= 0)
+                addons_xml += addon_xml + '\n\n'
             except Exception:
                 failure = traceback.format_exc()
                 print(f'Excluding {_path} for {addon} due to missing or poorly formatted addon.xml')
