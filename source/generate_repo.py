@@ -144,7 +144,7 @@ class Generator:
             shutil.move(filename, dst_path + filename)
             shutil.copy(addonid + '/addon.xml', dst_path + 'addon.xml')
             try:
-                icon_src = ''.join([str(x) for x in glob.glob(addonid + '/icon.*')])
+                icon_src = ''.join(str(x) for x in glob.glob(addonid + '/icon.*') if x[-4:] != '.psd')
                 shutil.copy(icon_src, dst_path + icon_src[-8:])
             except Exception:
                 print(f'**** Icon file missing for {addonid}')
