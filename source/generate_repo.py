@@ -37,7 +37,7 @@ import hashlib
 import zipfile
 import traceback
 from xml.dom import minidom
-from configparser import SafeConfigParser
+from configparser import ConfigParser
 
 
 class Generator:
@@ -51,7 +51,7 @@ class Generator:
         '''
         Load the configuration
         '''
-        self.config = SafeConfigParser()
+        self.config = ConfigParser()
         self.config.read('config.ini')
         self.tools_path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__))))
         self.output_path = '_' + self.config.get('locations', 'output_path')
@@ -109,13 +109,12 @@ class Generator:
     def _generate_zip_files(self):
         addons = os.listdir('.')
         for addon in addons:
+            if not os.path.isdir(addon) or addon == '.git' or addon == self.output_path or addon == self.tools_path:
+                continue
             _path = os.path.join(addon, 'addon.xml')
             if not os.path.isfile(_path):
                 continue
             try:
-                if not os.path.isdir(addon) or addon == '.git' or addon == self.output_path or addon == self.tools_path:
-                    continue
-                _path = os.path.join(addon, 'addon.xml')
                 document = minidom.parse(_path)
                 for parent in document.getElementsByTagName('addon'):
                     version = parent.getAttribute('version')
