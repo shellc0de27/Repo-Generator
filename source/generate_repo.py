@@ -109,7 +109,7 @@ class Generator:
     def _generate_zip_files(self):
         addons = os.listdir('.')
         for addon in addons:
-            if not os.path.isdir(addon) or addon == '.git' or addon == self.output_path or addon == self.tools_path:
+            if not os.path.isdir(addon) or addon in ['.git', self.output_path[:-1], os.path.basename(self.tools_path)]:
                 continue
             _path = os.path.join(addon, 'addon.xml')
             if not os.path.isfile(_path):
