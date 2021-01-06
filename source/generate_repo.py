@@ -125,7 +125,7 @@ class Generator:
                 print(f'Kodi Repo Generator Exception: \n{failure}')
 
     def _generate_zip_file(self, path, version, addonid):
-        print(f'Generate zip file for {addonid} {version}'
+        print(f'Generate zip file for {addonid} {version}')
         filename = '{path}-{version}.zip'.format(path=path, version=version)
         try:
             with zipfile.ZipFile(filename, 'w') as zip:
