@@ -128,12 +128,12 @@ class Generator:
         print(f'Generate zip file for {addonid} {version}')
         filename = '{path}-{version}.zip'.format(path=path, version=version)
         try:
-            with zipfile.ZipFile(filename, 'w') as zip:
+            with zipfile.ZipFile(filename, 'w') as zips:
                 for root, dirs, files in os.walk(path + os.path.sep):
                     for file in files:
                         ext = os.path.splitext(file)[-1].lower()
                         if ext not in self.excludes:
-                            zip.write(os.path.join(root, file))
+                            zips.write(os.path.join(root, file))
 
             if not os.path.exists(self.output_path + addonid):
                 os.makedirs(self.output_path + addonid)
