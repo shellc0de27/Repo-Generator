@@ -51,9 +51,9 @@ class Generator:
         '''
         Load the configuration
         '''
-        self.config = ConfigParser()
-        self.config.read('config.ini')
         self.tools_path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__))))
+        self.config = ConfigParser()
+        self.config.read(os.path.join(self.tools_path, 'config.ini'))
         self.output_path = '_' + self.config.get('locations', 'output_path')
         self.excludes = self.config.get('addon', 'excludes').split(',')
 
