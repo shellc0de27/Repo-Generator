@@ -135,20 +135,20 @@ class Generator:
                         if ext not in self.excludes:
                             zips.write(os.path.join(root, file))
 
-            if not os.path.exists(self.output_path + addonid):
-                os.makedirs(self.output_path + addonid)
+            if not os.path.exists(os.path.join(self.output_path, addonid)):
+                os.makedirs(os.path.join(self.output_path, addonid))
 
-            dst_path = self.output_path + addonid + os.path.sep
+            dst_path = os.path.join(self.output_path, addonid)
 
-            shutil.move(filename, dst_path + filename)
-            shutil.copy(addonid + '/addon.xml', dst_path + 'addon.xml')
+            shutil.move(filename, os.path.join(dst_path, filename))
+            shutil.copy(os.path.join(addonid, 'addon.xml'), os.path.join(dst_path, 'addon.xml'))
             try:
-                icon_src = ''.join(str(x) for x in glob.glob(addonid + '/icon.*') if x[-4:] != '.psd')
-                shutil.copy(icon_src, dst_path + icon_src[-8:])
+                icon_src = ''.join(str(x) for x in glob.glob(os.path.join(addonid, 'icon.*')) if x[-4:] != '.psd')
+                shutil.copy(icon_src, os.path.join(dst_path, icon_src[-8:]))
             except Exception:
                 print(f'**** Icon file missing for {addonid}')
             try:
-                shutil.copy(addonid + '/fanart.jpg', dst_path + 'fanart.jpg')
+                shutil.copy(os.path.join(addonid, 'fanart.jpg'), os.path.join(dst_path, 'fanart.jpg'))
             except Exception:
                 print(f'**** Fanart file missing for {addonid}')
 
