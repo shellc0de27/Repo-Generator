@@ -2,7 +2,10 @@
   <img src="https://forthebadge.com/images/badges/made-with-python.svg">
   <img src="https://forthebadge.com/images/badges/fo-shizzle.svg">
 </p>
-
+<p align="center">
+  <a href="https://www.codefactor.io/repository/github/shellc0de27/repo-generator"><img src="https://www.codefactor.io/repository/github/shellc0de27/repo-generator/badge" alt="CodeFactor" /></a>
+  <a href="https://github.com/shellc0de27/Repo-Generator/blob/master/LICENSE.md"><img alt="GitHub license" src="https://img.shields.io/github/license/shellc0de27/Repo-Generator"></a>
+</p>
 
 # Repo Generator Project
 
