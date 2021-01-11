@@ -83,12 +83,12 @@ class Generator:
         description = self.config.get('addon', 'description')
         url = self.config.get('locations', 'url')
 
-        if os.path.isfile(addonid + os.path.sep + 'addon.xml'):
+        if os.path.isfile(os.path.join(addonid, 'addon.xml')):
             return
 
         print('Create repository addon')
 
-        with open(self.tools_path + os.path.sep + 'template.xml', 'r') as template:
+        with open(os.path.join(self.tools_path, 'template.xml'), 'r') as template:
             template_xml = template.read()
 
         repo_xml = template_xml.format(
@@ -104,7 +104,7 @@ class Generator:
         if not os.path.exists(addonid):
             os.makedirs(addonid)
 
-        self._save_file(repo_xml.encode('utf-8'), file=addonid + os.path.sep + 'addon.xml')
+        self._save_file(repo_xml.encode('utf-8'), file=os.path.join(addonid, 'addon.xml'))
 
     def _generate_zip_files(self):
         addons = os.listdir('.')
@@ -175,17 +175,17 @@ class Generator:
                 print(f'Exception Details: \n{failure}')
 
         addons_xml = addons_xml.strip() + '\n</addons>\n'
-        self._save_file(addons_xml.encode('utf-8'), file=self.output_path + 'addons.xml')
+        self._save_file(addons_xml.encode('utf-8'), file=os.path.join(self.output_path, 'addons.xml'))
 
     def _generate_md5_file(self):
         try:
             hash_object = hashlib.md5()
-            with open(self.output_path + 'addons.xml', 'rb') as addons_file:
+            with open(os.path.join(self.output_path, 'addons.xml'), 'rb') as addons_file:
                 hash_buf = addons_file.read()
                 hash_object.update(hash_buf)
 
             result = hash_object.hexdigest()
-            self._save_file(result.encode('utf-8'), file=self.output_path + 'addons.xml.md5')
+            self._save_file(result.encode('utf-8'), file=os.path.join(self.output_path, 'addons.xml.md5'))
         except Exception:
             failure = traceback.format_exc()
             print('**** An error occurred creating addons.xml.md5 file!')
