@@ -16,13 +16,16 @@
         Modified by MuadDib: Include copying of addon.xml, icon.png, and fanart.jpg when present in addon folders
     04/12/2018
         Modified by MuadDib: Fixed md5 hashing issue for addons.xml file
-        Modified by MuadDib: Added excludes line to config.ini. This is a comma separated value of file extensions to not add to zip file in releases
+        Modified by MuadDib: Added excludes line to config.ini. This is a comma separated value of file extensions to
+        not add to zip file in releases
     12/4/2020
         Modified by Shellc0de: Cleaned up some code. Added the ability to capture both .png and .gif for icons
     12/13/2020
         Modified by Shellc0de: Port to Python 3.6+ only. Anything lower is not supported
         Modified by Shellc0de: Automatically deletes _zips (output_path set in the config.ini) folder for you
         whenever the repo needs to be updated
+    01/22/2021
+        Modified by Shellc0de: Code fixes and updates. Can now run from IDE's without having to set the absolute path.
 
     This file is "as is", without any warranty whatsoever. Use at your own risk
 
@@ -86,7 +89,7 @@ class Generator:
         if os.path.isfile(os.path.join(addonid, 'addon.xml')):
             return
 
-        print('Create repository addon')
+        print('Creating your repository addon for the first time')
 
         with open(os.path.join(self.tools_path, 'template.xml'), 'r') as template:
             template_xml = template.read()
