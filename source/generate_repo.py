@@ -138,26 +138,26 @@ class Generator:
                         if ext not in self.excludes:
                             zips.write(os.path.join(root, file))
 
-            if not os.path.exists(os.path.join(self.output_path, addonid)):
-                os.makedirs(os.path.join(self.output_path, addonid))
-
-            dst_path = os.path.join(self.output_path, addonid)
-
-            shutil.move(filename, os.path.join(dst_path, filename))
-            shutil.copy(os.path.join(addonid, 'addon.xml'), os.path.join(dst_path, 'addon.xml'))
-            try:
-                icon_src = ''.join(str(x) for x in glob.glob(os.path.join(addonid, 'icon.*')) if x[-4:] != '.psd')
-                shutil.copy(icon_src, os.path.join(dst_path, icon_src[-8:]))
-            except Exception:
-                print(f'**** Icon file missing for {addonid}')
-            try:
-                shutil.copy(os.path.join(addonid, 'fanart.jpg'), os.path.join(dst_path, 'fanart.jpg'))
-            except Exception:
-                print(f'**** Fanart file missing for {addonid}')
-
+            os.makedirs(os.path.join(self.output_path, addonid))
+            self._copy_files(addonid, filename)
         except Exception:
             failure = traceback.format_exc()
             print(f'Kodi Repo Generator Exception: \n{failure}')
+
+    def _copy_files(self, addonid, zipped_file):
+        dst_path = os.path.join(self.output_path, addonid)
+
+        shutil.move(zipped_file, os.path.join(dst_path, zipped_file))
+        shutil.copy(os.path.join(addonid, 'addon.xml'), os.path.join(dst_path, 'addon.xml'))
+        try:
+            icon_src = ''.join(str(x) for x in glob.glob(os.path.join(addonid, 'icon.*')) if x[-4:] != '.psd')
+            shutil.copy(icon_src, os.path.join(dst_path, icon_src[-8:]))
+        except Exception:
+            print(f'**** Icon file missing for {addonid}')
+        try:
+            shutil.copy(os.path.join(addonid, 'fanart.jpg'), os.path.join(dst_path, 'fanart.jpg'))
+        except Exception:
+            print(f'**** Fanart file missing for {addonid}')
 
     def _generate_addons_file(self):
         addons = os.listdir('.')
