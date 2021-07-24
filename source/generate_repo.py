@@ -64,6 +64,7 @@ class Generator:
 
         self._pre_run()
         self._generate_repo_files()
+        self._get_filtered_path()
         self._generate_addons_file()
         self._generate_md5_file()
         self._generate_zip_files()
@@ -109,14 +110,15 @@ class Generator:
 
         self._save_file(repo_xml.encode('utf-8'), file=os.path.join(addonid, 'addon.xml'))
 
+    def _get_filtered_path(self):
+        self.addons = [os.path.join(x, 'addon.xml') for x in os.listdir() if os.path.isdir(x) and x not in [
+            '.git', self.output_path[:-1], os.path.basename(self.tools_path)] and os.path.isfile(
+            os.path.join(x, 'addon.xml'))]
+        return self.addons
+
     def _generate_zip_files(self):
-        addons = os.listdir('.')
-        for addon in addons:
-            if not os.path.isdir(addon) or addon in ['.git', self.output_path[:-1], os.path.basename(self.tools_path)]:
-                continue
-            _path = os.path.join(addon, 'addon.xml')
-            if not os.path.isfile(_path):
-                continue
+        for _path in self.addons:
+            addon = _path.split(os.sep)[0]
             try:
                 document = minidom.parse(_path)
                 for parent in document.getElementsByTagName('addon'):
@@ -160,12 +162,8 @@ class Generator:
             print(f'**** Fanart file missing for {addonid}')
 
     def _generate_addons_file(self):
-        addons = os.listdir('.')
         addons_xml = '<?xml version="1.0" encoding="UTF-8"?>\n<addons>\n'
-        for addon in addons:
-            _path = os.path.join(addon, 'addon.xml')
-            if not os.path.isfile(_path):
-                continue
+        for _path in self.addons:
             try:
                 with open(_path, 'r', encoding='utf-8') as xl:
                     xml_lines = xl.read().splitlines()
@@ -174,7 +172,7 @@ class Generator:
                 addons_xml += addon_xml + '\n\n'
             except Exception:
                 failure = traceback.format_exc()
-                print(f'Excluding {_path} for {addon} due to missing or poorly formatted addon.xml')
+                print(f'Excluding {_path} for {_path.split(os.sep)[0]} due to missing or poorly formatted addon.xml')
                 print(f'Exception Details: \n{failure}')
 
         addons_xml = addons_xml.strip() + '\n</addons>\n'
