@@ -26,6 +26,8 @@
         whenever the repo needs to be updated
     01/22/2021
         Modified by Shellc0de: Code fixes and updates. Can now run from IDE's without having to set the absolute path.
+    07/25/2021
+        Modified by Shellc0de: Code updates, 2 new methods created.
 
     This file is "as is", without any warranty whatsoever. Use at your own risk
 
@@ -114,7 +116,6 @@ class Generator:
         self.addons = [os.path.join(x, 'addon.xml') for x in os.listdir() if os.path.isdir(x) and x not in [
             '.git', self.output_path[:-1], os.path.basename(self.tools_path)] and os.path.isfile(
             os.path.join(x, 'addon.xml'))]
-        return self.addons
 
     def _generate_zip_files(self):
         for _path in self.addons:
