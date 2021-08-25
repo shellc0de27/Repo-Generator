@@ -127,12 +127,11 @@ class Generator:
                     addonid = parent.getAttribute('id')
                 self._generate_zip_file(addon, version, addonid)
             except Exception:
-                failure = traceback.format_exc()
-                print(f'Kodi Repo Generator Exception: \n{failure}')
+                print(f'Kodi Repo Generator Exception: \n{traceback.format_exc()}')
 
     def _generate_zip_file(self, path, version, addonid):
         print(f'Generate zip file for {addonid} {version}')
-        filename = '{path}-{version}.zip'.format(path=path, version=version)
+        filename = f'{path}-{version}.zip'
         try:
             with zipfile.ZipFile(filename, 'w') as zips:
                 for root, dirs, files in os.walk(path + os.path.sep):
@@ -144,8 +143,7 @@ class Generator:
             os.makedirs(os.path.join(self.output_path, addonid))
             self._copy_files(addonid, filename)
         except Exception:
-            failure = traceback.format_exc()
-            print(f'Kodi Repo Generator Exception: \n{failure}')
+            print(f'Kodi Repo Generator Exception: \n{traceback.format_exc()}')
 
     def _copy_files(self, addonid, zipped_file):
         dst_path = os.path.join(self.output_path, addonid)
@@ -155,11 +153,11 @@ class Generator:
         try:
             icon_src = ''.join(str(x) for x in glob.glob(os.path.join(addonid, 'icon.*')) if x[-4:] != '.psd')
             shutil.copy(icon_src, os.path.join(dst_path, icon_src[-8:]))
-        except Exception:
+        except FileNotFoundError:
             print(f'**** Icon file missing for {addonid}')
         try:
             shutil.copy(os.path.join(addonid, 'fanart.jpg'), os.path.join(dst_path, 'fanart.jpg'))
-        except Exception:
+        except FileNotFoundError:
             print(f'**** Fanart file missing for {addonid}')
 
     def _generate_addons_file(self):
@@ -172,9 +170,7 @@ class Generator:
                 addon_xml = '\n'.join(str(line.rstrip()) for line in xml_lines if not line.find('<?xml') >= 0)
                 addons_xml += addon_xml + '\n\n'
             except Exception:
-                failure = traceback.format_exc()
-                print(f'Excluding {_path} for {_path.split(os.sep)[0]} due to missing or poorly formatted addon.xml')
-                print(f'Exception Details: \n{failure}')
+                print(f'Excluding {_path} for {_path.split(os.sep)[0]} due to missing or poorly formatted addon.xml \n{traceback.format_exc()}')
 
         addons_xml = addons_xml.strip() + '\n</addons>\n'
         self._save_file(addons_xml.encode('utf-8'), file=os.path.join(self.output_path, 'addons.xml'))
@@ -189,18 +185,14 @@ class Generator:
             result = hash_object.hexdigest()
             self._save_file(result.encode('utf-8'), file=os.path.join(self.output_path, 'addons.xml.md5'))
         except Exception:
-            failure = traceback.format_exc()
-            print('**** An error occurred creating addons.xml.md5 file!')
-            print(f'Kodi Repo Generator Exception: \n{failure}')
+            print(f'**** An error occurred creating addons.xml.md5 file! \n{traceback.format_exc()}')
 
     def _save_file(self, data, file):
         try:
             with open(file, 'w', encoding='utf-8') as sf:
                 sf.write(data.decode('utf-8'))
         except Exception:
-            failure = traceback.format_exc()
-            print(f'**** An error occurred saving --> {file}')
-            print(f'Kodi Repo Generator Exception: \n{failure}')
+            print(f'**** An error occurred saving --> {file} \n{traceback.format_exc()}')
 
 
 if __name__ == '__main__':
