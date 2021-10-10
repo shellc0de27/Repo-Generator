@@ -51,7 +51,6 @@ try:
     init(autoreset=True)
 except ImportError:
     print('*** Note: PIP install colorama if you want colored text in the terminal.')
-    pass
 
 
 class Generator:
