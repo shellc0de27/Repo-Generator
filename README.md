@@ -25,6 +25,8 @@
 ## Install
 
 - Requires Python 3.6 or higher (tested on 3.6)
+- (Optional) Colorama `pip install colorama`
+
 
 ## Author
 
