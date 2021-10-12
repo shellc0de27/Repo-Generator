@@ -30,7 +30,9 @@
     07/25/2021
         Modified by Shellc0de: Code updates, 2 new methods created.
     10/09/2021
-        Modified by Shellc0de: Added colored output to the terminal which is optional and off by default.
+        Modified by Shellc0de: Added colored output to the terminal and zip compression which both are optional
+        and off by default. They can be enabled in the config.ini by setting the value to True. NOTE - enabling
+        compression will be make this script slower for obvious reasons.
 
     This file is "as is", without any warranty whatsoever. Use at your own risk
 
