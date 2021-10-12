@@ -69,7 +69,8 @@ class Generator:
         self.config.read(os.path.join(self.tools_path, 'config.ini'))
         self.output_path = '_' + self.config.get('locations', 'output_path')
         self.excludes = self.config.get('addon', 'excludes').split(',')
-        self.colored_output = self.config.get('addon', 'colored_output')
+        self.colored_output = self.config.get('extras', 'colored_output')
+        self.compress_zips = self.config.get('extras', 'compress_zips')
 
         os.chdir(os.path.abspath(os.path.join(self.tools_path, os.pardir)))
 
@@ -142,9 +143,10 @@ class Generator:
 
     def _generate_zip_file(self, path, version, addonid):
         self._printer(msg=f'Generating zip file for {addonid} {version}', color='green')
+        cmode = zipfile.ZIP_DEFLATED if self.compress_zips == 'True' else zipfile.ZIP_STORED
         filename = f'{path}-{version}.zip'
         try:
-            with zipfile.ZipFile(filename, 'w') as zips:
+            with zipfile.ZipFile(filename, 'w', compression=cmode) as zips:
                 for root, dirs, files in os.walk(path + os.path.sep):
                     for file in files:
                         ext = os.path.splitext(file)[-1].lower()
