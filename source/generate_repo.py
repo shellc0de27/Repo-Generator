@@ -71,8 +71,8 @@ class Generator:
         self.config.read(os.path.join(self.tools_path, 'config.ini'))
         self.output_path = '_' + self.config.get('locations', 'output_path')
         self.excludes = self.config.get('addon', 'excludes').split(',')
-        self.colored_output = self.config.get('extras', 'colored_output')
-        self.compress_zips = self.config.get('extras', 'compress_zips')
+        self.colored_output = self.config.getboolean('extras', 'colored_output')
+        self.compress_zips = self.config.getboolean('extras', 'compress_zips')
 
         os.chdir(os.path.abspath(os.path.join(self.tools_path, os.pardir)))
 
@@ -145,7 +145,7 @@ class Generator:
 
     def _generate_zip_file(self, path, version, addonid):
         self._printer(msg=f'Generating zip file for {addonid} {version}', color='green')
-        cmode = zipfile.ZIP_DEFLATED if self.compress_zips == 'True' else zipfile.ZIP_STORED
+        cmode = zipfile.ZIP_DEFLATED if self.compress_zips is True else zipfile.ZIP_STORED
         filename = f'{path}-{version}.zip'
         try:
             with zipfile.ZipFile(filename, 'w', compression=cmode) as zips:
@@ -214,13 +214,16 @@ class Generator:
             self._printer(msg=f'{traceback.format_exc()}')
 
     def _printer(self, msg='Kodi Repo Generator Exception', color=''):
-        if self.colored_output == 'True':
-            fore_colors = {
-                'red': Fore.RED, 'green': Fore.GREEN, 'yellow': Fore.YELLOW,
-                'blue': Fore.BLUE, 'magenta': Fore.MAGENTA, 'cyan': Fore.CYAN
-            }
-            color = fore_colors[color] if color else ''
-            print(f'{color}{msg}')
+        if self.colored_output is True:
+            try:
+                fore_colors = {
+                    'red': Fore.RED, 'green': Fore.GREEN, 'yellow': Fore.YELLOW,
+                    'blue': Fore.BLUE, 'magenta': Fore.MAGENTA, 'cyan': Fore.CYAN
+                }
+                color = fore_colors[color] if color else ''
+                print(f'{color}{msg}')
+            except NameError:
+                print('Install colorama or set colored_output in the config file to False')
         else:
             print(f'{msg}')
 
