@@ -47,11 +47,13 @@ import shutil
 import hashlib
 import zipfile
 import traceback
+from sys import platform
 from xml.dom import minidom
 from configparser import ConfigParser
 try:
     from colorama import init, Fore
-    init(autoreset=True)
+    if platform == 'win32':
+        init(autoreset=True, convert=True)
 except ImportError:
     print('*** Note: PIP install colorama if you want colored text in the terminal.')
 
