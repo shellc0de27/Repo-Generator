@@ -1,4 +1,5 @@
-# -*- coding: UTF-8 -*-
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 '''
      ____  ____  ____  _____     ___  ____  _  _  ____  ____    __   ____  _____  ____
     (  _ \( ___)(  _ \(  _  )   / __)( ___)( \( )( ___)(  _ \  /__\ (_  _)(  _  )(  _ \
@@ -144,7 +145,7 @@ class Generator:
                 self._printer(msg=f'{traceback.format_exc()}')
 
     def _generate_zip_file(self, path, version, addonid):
-        self._printer(msg=f'Generating zip file for {addonid} {version}', color='green')
+        self._printer(msg=f'Generating zip file for {addonid} {version}', color='cyan')
         cmode = zipfile.ZIP_DEFLATED if self.compress_zips is True else zipfile.ZIP_STORED
         filename = f'{path}-{version}.zip'
         try:
