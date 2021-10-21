@@ -34,6 +34,8 @@
         Modified by Shellc0de: Added colored output to the terminal and zip compression which both are optional
         and off by default. They can be enabled in the config.ini by setting the value to True. NOTE - enabling
         compression will be make this script slower for obvious reasons.
+    10/21/2021
+        Modified by Shellc0de: Mostly colorama adjustments and fixes.
 
     This file is "as is", without any warranty whatsoever. Use at your own risk
 
@@ -51,13 +53,16 @@ from xml.dom import minidom
 from sys import platform, stdout
 from configparser import ConfigParser
 try:
-    from colorama import init, Fore
-    if platform == 'win32' and stdout.isatty():
-        init(autoreset=True, convert=True)
-    elif platform == 'win32' and not stdout.isatty():
-        init(autoreset=True, strip=False)
+    if platform == 'win32':
+        from colorama import init, Fore
+        if stdout.isatty():
+            init(autoreset=True, convert=True)
+        elif not stdout.isatty():
+            init(autoreset=True, strip=False)
+    else:
+        from colorama import Fore
 except ImportError:
-    print('*** Note: PIP install colorama if you want colored text in the terminal.')
+    print('**** Note: PIP install colorama if you want colored text in the terminal.')
 
 
 class Generator:
