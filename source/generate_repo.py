@@ -53,16 +53,12 @@ from xml.dom import minidom
 from sys import platform, stdout
 from configparser import ConfigParser
 try:
+    import colorama as cr
     if platform == 'win32':
-        from colorama import init, Fore
-        if stdout.isatty():
-            init(autoreset=True, convert=True)
-        elif not stdout.isatty():
-            init(autoreset=True, strip=False)
-    else:
-        from colorama import Fore
+        cr.init(autoreset=True, convert=True) if stdout.isatty() else cr.init(
+            autoreset=True, strip=False)
 except ImportError:
-    print('**** Note: PIP install colorama if you want colored text in the terminal.')
+    pass
 
 
 class Generator:
@@ -155,7 +151,7 @@ class Generator:
 
     def _generate_zip_file(self, path, version, addonid):
         self._printer(msg=f'Generating zip file for {addonid} {version}', color='cyan')
-        cmode = zipfile.ZIP_DEFLATED if self.compress_zips is True else zipfile.ZIP_STORED
+        cmode = zipfile.ZIP_DEFLATED if self.compress_zips else zipfile.ZIP_STORED
         filename = f'{path}-{version}.zip'
         try:
             with zipfile.ZipFile(filename, 'w', compression=cmode) as zips:
@@ -224,11 +220,11 @@ class Generator:
             self._printer(msg=f'{traceback.format_exc()}')
 
     def _printer(self, msg='Kodi Repo Generator Exception', color=''):
-        if self.colored_output is True:
+        if self.colored_output:
             try:
                 fore_colors = {
-                    'red': Fore.RED, 'green': Fore.GREEN, 'yellow': Fore.YELLOW,
-                    'blue': Fore.BLUE, 'magenta': Fore.MAGENTA, 'cyan': Fore.CYAN
+                    'red': cr.Fore.RED, 'green': cr.Fore.GREEN, 'yellow': cr.Fore.YELLOW,
+                    'blue': cr.Fore.BLUE, 'magenta': cr.Fore.MAGENTA, 'cyan': cr.Fore.CYAN
                 }
                 color = fore_colors[color] if color else ''
                 print(f'{color}{msg}')
