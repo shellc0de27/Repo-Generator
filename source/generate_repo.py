@@ -55,8 +55,10 @@ from configparser import ConfigParser
 try:
     import colorama as cr
     if platform == 'win32':
-        cr.init(autoreset=True, convert=True) if stdout.isatty() else cr.init(
-            autoreset=True, strip=False)
+        if stdout.isatty():
+            cr.init(autoreset=True, convert=True)
+        else:
+            cr.init(autoreset=True, strip=False)
 except ImportError:
     pass
 
