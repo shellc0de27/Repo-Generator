@@ -227,7 +227,10 @@ class Generator:
                     'blue': cr.Fore.BLUE, 'magenta': cr.Fore.MAGENTA, 'cyan': cr.Fore.CYAN
                 }
                 color = fore_colors[color] if color else ''
-                print(f'{color}{message}') if not error else print(f'{color}{message}\n{traceback.format_exc()}')
+                if error:
+                    print(f'{color}{message}\n{traceback.format_exc()}')
+                else:
+                    print(f'{color}{message}')
             except NameError:
                 print('Install colorama or set colored_output in the config file to False')
         else:
