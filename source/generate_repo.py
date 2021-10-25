@@ -234,7 +234,10 @@ class Generator:
             except NameError:
                 print('Install colorama or set colored_output in the config file to False')
         else:
-            print(f'{message}')
+            if error:
+                print(f'{message}\n{traceback.format_exc()}')
+            else:
+                print(f'{message}')
 
 
 if __name__ == '__main__':
