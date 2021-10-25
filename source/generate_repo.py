@@ -91,9 +91,9 @@ class Generator:
         self._generate_md5_file()
         self._generate_zip_files()
 
-        self._printer(msg='Finished updating addons xml, md5 files and zipping addons', color='green')
-        self._printer(msg='Always double check your MD5 Hash using a site like http://onlinemd5.com/', color='yellow')
-        self._printer(msg='if the repo is not showing files or downloading properly.', color='yellow')
+        self._printer('Finished updating addons xml, md5 files and zipping addons', color='green')
+        self._printer('Always double check your MD5 Hash using a site like http://onlinemd5.com/', color='yellow')
+        self._printer('if the repo is not showing files or downloading properly.', color='yellow')
 
     def _pre_run(self):
         if os.path.exists(self.output_path):
@@ -112,7 +112,7 @@ class Generator:
         if os.path.isfile(os.path.join(addonid, 'addon.xml')):
             return
 
-        self._printer(msg='Creating your repository addon for the first time', color='green')
+        self._printer('Creating your repository addon for the first time', color='green')
 
         with open(os.path.join(self.tools_path, 'template.xml'), 'r') as template:
             template_xml = template.read()
@@ -148,11 +148,10 @@ class Generator:
                     addonid = parent.getAttribute('id')
                 self._generate_zip_file(addon, version, addonid)
             except Exception:
-                self._printer(color='red')
-                self._printer(msg=f'{traceback.format_exc()}')
+                self._printer('Kodi Repo Generator Exception', color='red', error=True)
 
     def _generate_zip_file(self, path, version, addonid):
-        self._printer(msg=f'Generating zip file for {addonid} {version}', color='cyan')
+        self._printer(f'Generating zip file for {addonid} {version}', color='cyan')
         cmode = zipfile.ZIP_DEFLATED if self.compress_zips else zipfile.ZIP_STORED
         filename = f'{path}-{version}.zip'
         try:
@@ -166,8 +165,7 @@ class Generator:
             os.makedirs(os.path.join(self.output_path, addonid))
             self._copy_files(addonid, filename)
         except Exception:
-            self._printer(color='red')
-            self._printer(msg=f'{traceback.format_exc()}')
+            self._printer('Kodi Repo Generator Exception', color='red', error=True)
 
     def _copy_files(self, addonid, zipped_file):
         dst_path = os.path.join(self.output_path, addonid)
@@ -178,11 +176,11 @@ class Generator:
             icon_src = ''.join(str(x) for x in glob.glob(os.path.join(addonid, 'icon.*')) if x[-4:] != '.psd')
             shutil.copy(icon_src, os.path.join(dst_path, icon_src[-8:]))
         except FileNotFoundError:
-            self._printer(msg=f'**** Icon file missing for {addonid}', color='yellow')
+            self._printer(f'**** Icon file missing for {addonid}', color='yellow')
         try:
             shutil.copy(os.path.join(addonid, 'fanart.jpg'), os.path.join(dst_path, 'fanart.jpg'))
         except FileNotFoundError:
-            self._printer(msg=f'**** Fanart file missing for {addonid}', color='yellow')
+            self._printer(f'**** Fanart file missing for {addonid}', color='yellow')
 
     def _generate_addons_file(self):
         addons_xml = '<?xml version="1.0" encoding="UTF-8"?>\n<addons>\n'
@@ -194,8 +192,10 @@ class Generator:
                 addon_xml = '\n'.join(str(line.rstrip()) for line in xml_lines if not line.find('<?xml') >= 0)
                 addons_xml += addon_xml + '\n\n'
             except Exception:
-                self._printer(msg=f'Excluding {_path} for {_path.split(os.sep)[0]} due to missing or poorly formatted addon.xml', color='red')
-                self._printer(msg=f'{traceback.format_exc()}')
+                self._printer(
+                    f'Excluding {_path} for {_path.split(os.sep)[0]} due to a poorly formatted addon.xml',
+                    color='red', error=True
+                )
 
         addons_xml = addons_xml.strip() + '\n</addons>\n'
         self._save_file(addons_xml.encode('utf-8'), file=os.path.join(self.output_path, 'addons.xml'))
@@ -210,18 +210,16 @@ class Generator:
             result = hash_object.hexdigest()
             self._save_file(result.encode('utf-8'), file=os.path.join(self.output_path, 'addons.xml.md5'))
         except Exception:
-            self._printer(msg='**** An error occurred creating addons.xml.md5 file!', color='red')
-            self._printer(msg=f'{traceback.format_exc()}')
+            self._printer('**** An error occurred creating addons.xml.md5 file!', color='red', error=True)
 
     def _save_file(self, data, file):
         try:
             with open(file, 'w', encoding='utf-8') as sf:
                 sf.write(data.decode('utf-8'))
         except Exception:
-            self._printer(msg=f'**** An error occurred saving --> {file}', color='red')
-            self._printer(msg=f'{traceback.format_exc()}')
+            self._printer(f'**** An error occurred saving --> {file}', color='red', error=True)
 
-    def _printer(self, msg='Kodi Repo Generator Exception', color=''):
+    def _printer(self, message, color='', error=False):
         if self.colored_output:
             try:
                 fore_colors = {
@@ -229,11 +227,11 @@ class Generator:
                     'blue': cr.Fore.BLUE, 'magenta': cr.Fore.MAGENTA, 'cyan': cr.Fore.CYAN
                 }
                 color = fore_colors[color] if color else ''
-                print(f'{color}{msg}')
+                print(f'{color}{message}') if not error else print(f'{color}{message}\n{traceback.format_exc()}')
             except NameError:
                 print('Install colorama or set colored_output in the config file to False')
         else:
-            print(f'{msg}')
+            print(f'{message}')
 
 
 if __name__ == '__main__':
