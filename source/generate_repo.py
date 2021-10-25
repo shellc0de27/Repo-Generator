@@ -233,11 +233,10 @@ class Generator:
                     print(f'{color}{message}{cr.Fore.RESET}')
             except NameError:
                 print('Install colorama or set colored_output in the config file to False')
+        elif error:
+            print(f'{message}\n{traceback.format_exc()}')
         else:
-            if error:
-                print(f'{message}\n{traceback.format_exc()}')
-            else:
-                print(f'{message}')
+            print(f'{message}')
 
 
 if __name__ == '__main__':
