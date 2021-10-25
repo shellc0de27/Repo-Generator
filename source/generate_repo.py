@@ -56,9 +56,9 @@ try:
     import colorama as cr
     if platform == 'win32':
         if stdout.isatty():
-            cr.init(autoreset=True, convert=True)
+            cr.init(convert=True)
         else:
-            cr.init(autoreset=True, strip=False)
+            cr.init(strip=False)
 except ImportError:
     pass
 
@@ -228,9 +228,9 @@ class Generator:
                 }
                 color = fore_colors[color] if color else ''
                 if error:
-                    print(f'{color}{message}\n{traceback.format_exc()}')
+                    print(f'{color}{message}\n{traceback.format_exc()}{cr.Fore.RESET}')
                 else:
-                    print(f'{color}{message}')
+                    print(f'{color}{message}{cr.Fore.RESET}')
             except NameError:
                 print('Install colorama or set colored_output in the config file to False')
         else:
