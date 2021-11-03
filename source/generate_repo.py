@@ -220,23 +220,24 @@ class Generator:
             self._printer(f'**** An error occurred saving --> {file}', color='red', error=True)
 
     def _printer(self, message, color='', error=False):
-        if self.colored_output:
-            try:
-                fore_colors = {
-                    'red': cr.Fore.RED, 'green': cr.Fore.GREEN, 'yellow': cr.Fore.YELLOW,
-                    'blue': cr.Fore.BLUE, 'magenta': cr.Fore.MAGENTA, 'cyan': cr.Fore.CYAN
-                }
-                color = fore_colors[color] if color else ''
-                if error:
-                    print(f'{color}{message}\n{traceback.format_exc()}{cr.Fore.RESET}')
-                else:
-                    print(f'{color}{message}{cr.Fore.RESET}')
-            except NameError:
-                print('Install colorama or set colored_output in the config file to False')
-        elif error:
-            print(f'{message}\n{traceback.format_exc()}')
-        else:
-            print(f'{message}')
+        try:
+            if self.colored_output and error:
+                print(f'{self._generate_fore_color(color)}{message}\n{traceback.format_exc()}{cr.Fore.RESET}')
+            elif self.colored_output:
+                print(f'{self._generate_fore_color(color)}{message}{cr.Fore.RESET}')
+            elif error:
+                print(f'{message}\n{traceback.format_exc()}')
+            else:
+                print(f'{message}')
+        except NameError:
+            print('Install colorama or set colored_output in the config file to False')
+
+    def _generate_fore_color(self, fore_color):
+        fore_colors = {
+            'red': cr.Fore.RED, 'green': cr.Fore.GREEN, 'yellow': cr.Fore.YELLOW,
+            'blue': cr.Fore.BLUE, 'magenta': cr.Fore.MAGENTA, 'cyan': cr.Fore.CYAN
+        }
+        return fore_colors[fore_color] if fore_color else ''
 
 
 if __name__ == '__main__':
