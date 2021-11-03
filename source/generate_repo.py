@@ -43,6 +43,8 @@
         Playlist: https://www.youtube.com/playlist?list=PLYkSOUo1Vu4ZN6l6xJ9fzJ-d0Y_-ACo68
 '''
 
+__version__ = '1.5.8'
+
 import os
 import glob
 import shutil
@@ -241,5 +243,11 @@ class Generator:
 
 
 if __name__ == '__main__':
-    print('Executing the Kodi Repo Generator.....')
+    apath = os.path.dirname(os.path.abspath(__file__))
+    try:
+        with open(os.path.join(apath, 'banner.txt'), 'r') as banner:
+            print(banner.read())
+    except FileNotFoundError:
+        pass
+    print(f'Executing the Kodi Repo Generator version {__version__}')
     Generator()
