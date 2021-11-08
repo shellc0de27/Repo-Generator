@@ -11,31 +11,7 @@
     All imports are from the built in standard library, with the exception of colorama (optional).
     Will need to pip3 install colorama and set colored_output=True in the config.ini
 
-    Unknown Dates - Work of previous developers
-        Modified by Rodrigo@XMBCHUB to zip plugins/repositories to a "zip" folder
-        Modified by BartOtten: create a repository addon, skip folders without addon.xml, user config file
-    11/12/2017
-        Modified by MuadDib: Include copying of addon.xml, icon.png, and fanart.jpg when present in addon folders
-    04/12/2018
-        Modified by MuadDib: Fixed md5 hashing issue for addons.xml file
-        Modified by MuadDib: Added excludes line to config.ini. This is a comma separated value of file extensions to
-        not add to zip file in releases
-    12/4/2020
-        Modified by Shellc0de: Cleaned up some code. Added the ability to capture .png or .gif for icons
-    12/13/2020
-        Modified by Shellc0de: Port to Python 3.6+ only. Anything lower is not supported
-        Modified by Shellc0de: Automatically deletes _zips (output_path set in the config.ini) folder for you
-        whenever the repo needs to be updated
-    01/22/2021
-        Modified by Shellc0de: Code fixes and updates. Can now run from IDE's without having to set the absolute path.
-    07/25/2021
-        Modified by Shellc0de: Code updates, 2 new methods created.
-    10/09/2021
-        Modified by Shellc0de: Added colored output to the terminal and zip compression which both are optional
-        and off by default. They can be enabled in the config.ini by setting the value to True. NOTE - enabling
-        compression will be make this script slower for obvious reasons.
-    10/21/2021
-        Modified by Shellc0de: Mostly colorama adjustments and fixes.
+    **** See changelog.txt for all updates and fixes ****
 
     This file is "as is", without any warranty whatsoever. Use at your own risk
 
@@ -43,7 +19,7 @@
         Playlist: https://www.youtube.com/playlist?list=PLYkSOUo1Vu4ZN6l6xJ9fzJ-d0Y_-ACo68
 '''
 
-__version__ = '1.5.8'
+__version__ = '1.5.9'
 
 import os
 import glob
